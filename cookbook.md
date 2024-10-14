@@ -83,3 +83,43 @@
         until (eq item eof)
         collect item))
 ```
+
+## Create package
+
+[Link](https://www.youtube.com/watch?v=LqBbGFMPcDI)
+
+### 0. Create file with package description
+
+### 1. Create ASDF file in root directory
+
+In directory `hello-web`:
+
+```
+(asdf:defsystem #:hello-web
+  :description "Web app tutor"
+
+  :author ""
+  :license  "BSD"
+  :version "0.0.0"
+  :serial t
+  :depends-on (#:clog)
+  :components ((:file "hello")))
+
+```
+
+### 2. Add path to local quicklisp project path
+
+```lisp
+(push #P"~/projects/lisp/hello-web"
+    ql:*local-project-directories*)
+```
+
+### 3. Load with quicklisp
+
+```lisp
+(ql:quickload :hello-web)
+```
+
+## Compile standalone executable
+
+TBD
