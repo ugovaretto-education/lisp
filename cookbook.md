@@ -122,4 +122,4 @@ In directory `hello-web`:
 
 ## Compile standalone executable
 
-TBD
+
