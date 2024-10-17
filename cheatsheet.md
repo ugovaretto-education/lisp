@@ -6,6 +6,9 @@ Put `.dir-locals.el` in any directory to create per-folder/project configuaratio
 `early-init.el` is run before `init.el` if present.
 (electric-pair-mode): automatically add matching parentheses.
 
+*SBLC* reads the configuration from the file `$HOME/.sblrc` to use *quicklisp* from
+other LISPs invoke `(load "~/.local/quicklisp/setup.lisp")` or wherever you
+installed *quicklisp* (default path is `"~/quicklisp"`).
 
 ## Install SBCL and package manager:
 
@@ -93,9 +96,9 @@ OR
 
 ```lisp
 (setq-default sly-lisp-implementations
-              `((sbcl  ("sbcl") :coding-system utf-8-unix)
-                (ccl   ("~/Downloads/2018-06/ccl/lx86cl64")
-                       :coding-system utf-8-unix)))
+    `((sbcl  ("sbcl") :coding-system utf-8-unix)
+        (ccl   ("~/Downloads/2018-06/ccl/lx86cl64")
+            :coding-system utf-8-unix)))
 
 (defmacro define-sly-lisp (name)
   `(defun ,name ()  (interactive)  (let ((sly-default-lisp ',name))  (sly))))

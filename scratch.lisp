@@ -1,0 +1,56 @@
+(defun matrix-multiply (matrix1 matrix2)
+  "Multiply two matrices and return the result."
+  (let* ((rows1 (length matrix1))
+         (cols1 (length (first matrix1)))
+         (rows2 (length matrix2))
+         (cols2 (length (first matrix2))))
+    (if (not (eq cols1 rows2))
+        (error "Matrix dimensions are not compatible for multiplication")
+        (let ((result (make-array (list rows1 cols2) :initial-element 0)))
+          (dotimes (i rows1 result)
+            (dotimes (j cols2)
+              (dotimes (k cols1)
+                (incf (aref result i j)
+                      (* (nth k (nth i  matrix1))
+                         (nth j (nth k  matrix2))))))
+            )))))
+
+(defun matrix-multiply-array (matrix1 matrix2)
+  "Multiply two matrices and return the result."
+  (let  ((rows1 (array-dimension matrix1 0))
+         (cols1 (array-dimension matrix1 1))
+         (rows2 (array-dimension matrix2 0))
+         (cols2 (array-dimension matrix2 1)))
+         (if (not (= cols1 rows2))
+             (error "Matrix dimensions are not compatible for multiplication")
+             (let ((result (make-array (list rows1 cols2) :initial-element 0)))
+               (dotimes (i rows1 result)
+                 (dotimes (j cols2)
+                   (dotimes (k cols1)
+                     (incf (aref result i j)
+                           (* (aref matrix1 i k)
+                              (aref matrix2 k j))))))))))
+
+(defun float-matrix-multiply-array (matrix1 matrix2)
+  (declare (type (array single-float)  matrix1 )
+           (type (array single-float)  matrix2 ))
+  "Multiply two matrices and return the result."
+  (let  ((rows1 (array-dimension matrix1 0))
+         (cols1 (array-dimension matrix1 1))
+         (rows2 (array-dimension matrix2 0))
+         (cols2 (array-dimension matrix2 1)))
+         (if (not (= cols1 rows2))
+             (error "Matrix dimensions are not compatible for multiplication")
+             (let ((result (make-array (list rows1 cols2) :initial-element 0)))
+               (dotimes (i rows1 result)
+                 (dotimes (j cols2)
+                   (dotimes (k cols1)
+                     (incf (aref result i j)
+                           (* (aref matrix1 i k)
+                              (aref matrix2 k j))))))))))
+
+;; declare typed array
+(defvar typed-array-1 (make-array '(2 2) :element-type
+                                  '(single-float) :initial-element 3.3))
+
+;; todo: test with typed data passed to function without declaring types inside function.

@@ -17,6 +17,7 @@ Compile function to achieve TCO, not needed for *SBCL*:
 
 Untyped:
 
+
 ```lisp
  (defun harmonic-tr (n accum)
   "tail-recursive harmonic function"
