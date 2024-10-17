@@ -1,5 +1,17 @@
 # LISP Cookbook
 
+## Optimise
+
+```lisp
+(proclaim '(optimize (speed 3) (safety 0) (space 0) (debug 0)))
+```
+
+Compile functions to achieve TCO, not needed for *SBCL*:
+
+```lisp
+(compile <function name>)
+```
+
 ## Rename macro
 
 ```(setf (macro-function 'mvb) (macro-function 'multiple-value-bind))```
@@ -56,6 +68,7 @@
 ```
 
 ## Read multiple lines from stdin
+
 ```lisp
 (defvar lines ())
 (loop for line = (read-line *terminal-io* nil :eof)
@@ -121,5 +134,3 @@ In directory `hello-web`:
 ```
 
 ## Compile standalone executable
-
-
