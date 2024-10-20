@@ -1,3 +1,4 @@
+(proclaim '(optimize (speed 3) (safety 0) (space 0) (debug 0)))
 (deftype array-index ()
   `(integer 0 (,array-dimension-limit)))
 

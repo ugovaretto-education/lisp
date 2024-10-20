@@ -157,6 +157,10 @@ C-x t 0: close current tab
 C-x t 1: keep only current tab
 C-x t o: next tab
 
+*Query replace*
+1. C-s-w: at beginning of word select current word for replacement
+2. Hit <Enter> and enter replacement word
+3. Press '!' for replacing all occurrences or keep presin 'y' or space to replace next occurence
 
 Elisp: C-j at end of elisp expression in scratch buffer
 
@@ -215,6 +219,28 @@ C-S-e: expand snippet.
 
 ### SLY
 C-r: history, keep pressing C-r to go back, '<space> expands last item added.
+C-c: compile file or region from other window
+C-c-k: compile and run buffer or region from other window
 
 ### Which-key
 Enable by invoking `which-key-mode`.
+
+### Magit
+'s': stage
+'c': commit
+'P': push
+
+### Recentf
+C-c-r: recent file list
+
+### Dired
+C-o: split window
++: new directory
+d: mark for deletion
+x: commit delete
+R: move
+m: mark
+c: copy
+
+### Vterm
+C-c-t: copy mode, read-only text buffer
