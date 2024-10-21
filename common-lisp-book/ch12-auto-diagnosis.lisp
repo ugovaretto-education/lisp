@@ -25,17 +25,20 @@
                  :if-does-not-exist :create)))
 
 (defun get-input (prompt)
-  (format t prompt)
-  (read-line))
+  (format t "~A" prompt)
+  (let ((l (read-line *query-io*)))
+    (finish-output *query-io*)
+    l))
 
 (defun get-expr (prompt)
   (read-from-string (get-input prompt)))
 
 (defun get-new-object ()
-  (let* ((name (get-expr "~&Node name: "))
-        (question (get-input "~&Question: "))
-        (yes-case (get-expr "~&Yes action: "))
-        (no-case (get-expr "~&No action: ")))
+  (get-input "PRESS ENTER TO START")
+  (let ((name (get-expr "Node name: "))
+        (question (get-input "Question: "))
+        (yes-case (get-expr "Yes action: "))
+        (no-case (get-expr "No action: ")))
     (make-node :name name
                :question question
                :yes-case yes-case
@@ -47,5 +50,16 @@
         (if (yes-or-no-p (node-question node))
             (node-yes-case node)
             (node-no-case node))
-        (progn (print "Node not found"
-                      ) nil))))
+        (progn (print "Node not found")
+               nil))))
+
+(defun run()
+  (let ((current-node 'start))
+    (get-input "AUTO DIAGNOSIS - PRESS ENTER TO START")
+    (loop
+      (let ((n (process-node current-node)))
+         (if (stringp n)
+         (progn (print n) (return-from run))
+         (if (null n)
+             (return-from run)
+             (setf current-node n)))))))
