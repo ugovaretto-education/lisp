@@ -1,0 +1,37 @@
+; 
+;  ( \
+;   \ \
+;   / /                |\\
+;  / /     .-`````-.   / ^`-.
+;  \ \    /         \_/  {|} `o
+;   \ \  /   .---.   \\ _  ,--'
+;    \ \/   /     \,  \( `^^^   Let the hacking commence!
+;     \   \/\      (\  )
+;      \   ) \     ) \ \
+;       ) /__ \__  ) (\ \___
+; jgs  (___)))__))(__))(__)))
+; 
+; Dedicated output stream setup (port 51956)
+; Redirecting all output to this MREPL
+; SLY NIL (#<MREPL mrepl-1-1>)
+; compiling file "/Users/ugo/projects/ugovaretto-education/lisp/common-lisp-book/ch12-auto-diagnosis.lisp" (written 20 OCT 2024 10:31:53 PM):
+
+; wrote /Users/ugo/projects/ugovaretto-education/lisp/common-lisp-book/ch12-auto-diagnosis.fasl
+; compilation finished in 0:00:00.022
+CL-USER> (load "./ch12-auto-diagnosis-data.lisp")
+T
+CL-USER> (with-open-file
+           (out #p"./tmp-nodes" :direction :output
+                :if-exists :supersede
+                :if-does-not-exist :create)
+           (format out "~S" *node-list*))
+NIL
+CL-USER> (add-nodes)
+NIL
+CL-USER> (with-open-file
+           (out #p"./tmp-nodes" :direction :output ;; append LISP objects to file
+                :if-exists :supersede
+                :if-does-not-exist :create)
+           (format out "~S" *node-list*))
+NIL
+CL-USER> (defvar allnodes (uiop:read-file-form #p"./tmp-nodes")) ;; read LISP objects into object list
