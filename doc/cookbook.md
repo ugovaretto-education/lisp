@@ -49,15 +49,15 @@ Compile functions to achieve TCO, not needed for *SBCL*:
 
 ```
 
-## Numbers from strings
+## Elements from strings
 
 ```lisp
-(defun parse-string-to-num (line)
+(defun parse-string-to-elem (line)
   (with-input-from-string (s line)
     (loop
-      for num := (read s nil nil)
-      while num
-      collect num)))
+      for elem := (read s nil nil)
+      while elem
+      collect elem)))
 ```
 
 ## Number string to digits
@@ -76,6 +76,33 @@ Compile functions to achieve TCO, not needed for *SBCL*:
       do (push line lines))
 (format t "~&~S" lines)
 ```
+
+```lisp
+(let ((i (read-line))
+      (lines ()))
+     (loop while (> (length i) 0) do
+         (push i lines)
+         (setf i (read-line)))
+     lines)
+```
+
+```lisp
+(loop
+    for line := (read-line)
+    while (not (zerop (length line)))
+    collect line)
+```
+
+### Read multiple elements as strings until EOF/Ctrl-D
+
+```lisp
+(defun read-elems-as-strings (stream)
+  (loop
+    for e := (read stream nil :eof)
+    while (not (equalp e :eof))
+    collect  e))
+```
+
 
 ## Read objects from file
 
