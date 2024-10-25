@@ -132,6 +132,28 @@ Compile functions to achieve TCO, not needed for *SBCL*:
 (format nil "~v@{~A~:*~}" 3 #\*) ;;Repeat '*' three times
 ```
 
+### Whitespace delimited string
+
+
+```lisp
+(defun read-string (&optional (stream *standard-input*))
+  (loop
+     for c = (peek-char nil stream nil nil)              ; include whitespace
+     while (and c (eql c (peek-char t stream nil nil)))  ; skip whitespace
+     collect (read-char stream) into letters
+     finally (return (coerce letters 'string))))
+```
+
+```lisp
+(defun read-string (&optional (stream *standard-input*))
+  (with-output-to-string (out)
+    (loop
+       for c = (peek-char nil stream nil nil)
+       while (and c (eql c (peek-char t stream nil nil)))
+       do (write-char (read-char stream) out))))
+```
+
+
 ## Create package
 
 [Link](https://www.youtube.com/watch?v=LqBbGFMPcDI)
