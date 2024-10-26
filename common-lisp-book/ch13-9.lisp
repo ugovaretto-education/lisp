@@ -1,6 +1,9 @@
-(defvar *crypto-text*)
+(defvar *crypto-text* "")
 (defvar *encipher-table* (make-hash-table))
 (defvar *decipher-table* (make-hash-table))
+
+(defun in (e h)
+  (not (null (gethash e h))))
 
 (defun init-encipher-table () (setf *encipher-table* (make-hash-table)))
 (defun init-decipher-table () (setf *decipher-table* (make-hash-table)))
@@ -44,3 +47,19 @@
     (case r
       ((done undo) r)
       (otherwise (char (string r) 0)))))
+
+(defun sub-letter (l)
+  (if (in l *decipher-table*)
+      (format t "~&~A already mapped to  ~A" l (gethash l *decipher-table*))
+      (progn
+        (format t "~&What does ~A decipher to? " l)
+        (let ((c (read-char)))
+          (if (alphanumericp c)
+              (make-subsitution l c)
+              (print "Not a letter")) nil))))
+
+;; (defun undo-letter ()
+;;                (format t "~&Undo which letter? ")
+;;                (let (c (read-char))
+;;                  (if (alphanumeric c)
+;;                      ))
