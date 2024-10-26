@@ -1,7 +1,4 @@
-(defvar *crypto-text* "")
-(defvar *encipher-table* (make-hash-table))
-(defvar *decipher-table* (make-hash-table))
-
+;;;; Utility functions
 (defun inh (e h)
   (not (null (gethash e h))))
 
@@ -14,6 +11,23 @@
 (defun killh (k h)
   (remhash k h))
 
+(defun max-elem (seq)
+  (labels
+    ((max-e (xs m)
+       (cond
+         ((null xs) m)
+         (t (cond
+              ((> (car xs) m) (max-e (cdr xs) (car xs)))
+              (t (max-e (cdr xs) m)))))))
+    (max-e seq (car seq))))
+;;;;
+
+
+(defvar *crypto-text* "")
+(defvar *encipher-table* (make-hash-table))
+(defvar *decipher-table* (make-hash-table))
+
+
 (defun init-encipher-table () (setf *encipher-table* (make-hash-table)))
 (defun init-decipher-table () (setf *decipher-table* (make-hash-table)))
 
@@ -23,8 +37,8 @@
           "enlpo pib slafml pvv bfwkj")))
 
 (defun make-subsitution (enciphered deciphered)
-  (setf (gethash deciphered *encipher-table*) enciphered) ;; decoded -> encoded
-  (setf (gethash enciphered *decipher-table*) deciphered)) ;; encoded -> decoded
+  (setf (gethash enciphered *decipher-table*) deciphered) ;; decoded -> encoded
+  (setf (gethash deciphered *encipher-table*) enciphered)) ;; encoded -> decoded
 
 (defun undo-substitution (enciphered)
   (let ((deciphered (gethash enciphered *decipher-table*)))
@@ -48,8 +62,9 @@
      (char (string x) 0)));;(format nil "~A" x) 0)))
 
 (defun show-text (text)
-  (map nil #'show-line text))
-
+  (map nil #'show-line text)
+  (let ((m (max-elem (mapcar #'length text))))
+   (format t "~&~A" (make-string m :initial-element #\-))))
 
 (defun read-letter ()
   (let ((r (read)))
