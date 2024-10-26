@@ -23,7 +23,7 @@
 ;;;;
 
 
-(defvar *crypto-text* "")
+(defvar *crypto-text* ())
 (defvar *encipher-table* (make-hash-table))
 (defvar *decipher-table* (make-hash-table))
 
@@ -51,8 +51,9 @@
 (defun decipher-string (line)
   (let ((outstr (make-string (length line) :initial-element #\Space)))
     (dotimes (i (length line))
-      (let ((c (gethash (aref line i) *decipher-table* )))
-        (if c (setf (aref outstr i) c))))))
+      (let ((c (gethash (aref line i) *decipher-table*)))
+        (if (not (null c)) (setf (aref outstr i) c))))
+    outstr))
 
 (defun show-line (line)
   (format t "~&~A~%~A~%" line (decipher-string line)))
@@ -70,7 +71,7 @@
   (let ((r (read)))
     (case r
       ((end undo) r)
-      (otherwise (char (string r) 0)))))
+      (otherwise (char-downcase (char (string r) 0))))))
 
 (defun sub-letter (l)
   (if (inh l *decipher-table*)
@@ -89,12 +90,14 @@
         (if (inh c *decipher-table*)
             (progn
               (killh (geth c *decipher-table*) *encipher-table*)
-              (killh c *decipher-table*)))
-        (format t "~&~A not found" c))
-    (print "Error - not a character")))
+              (killh c *decipher-table*))
+            (format t "~&~A not found" c))
+        (print "Error - not a character"))))
 
 (defun solve ()
   (fill-crypto-text)
+  (init-encipher-table)
+  (init-decipher-table)
   (loop
     (show-text *crypto-text*)
     (format t "~&Substitute which letter? ")
