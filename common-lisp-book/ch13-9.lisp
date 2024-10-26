@@ -2,8 +2,17 @@
 (defvar *encipher-table* (make-hash-table))
 (defvar *decipher-table* (make-hash-table))
 
-(defun in (e h)
+(defun inh (e h)
   (not (null (gethash e h))))
+
+(defun geth (k h)
+  (gethash k h))
+
+(defun puth (k h v)
+  (setf (gethash k h) v))
+
+(defun killh (k h)
+  (remhash k h))
 
 (defun init-encipher-table () (setf *encipher-table* (make-hash-table)))
 (defun init-decipher-table () (setf *decipher-table* (make-hash-table)))
@@ -45,11 +54,11 @@
 (defun read-letter ()
   (let ((r (read)))
     (case r
-      ((done undo) r)
+      ((end undo) r)
       (otherwise (char (string r) 0)))))
 
 (defun sub-letter (l)
-  (if (in l *decipher-table*)
+  (if (inh l *decipher-table*)
       (format t "~&~A already mapped to  ~A" l (gethash l *decipher-table*))
       (progn
         (format t "~&What does ~A decipher to? " l)
@@ -58,8 +67,25 @@
               (make-subsitution l c)
               (print "Not a letter")) nil))))
 
-;; (defun undo-letter ()
-;;                (format t "~&Undo which letter? ")
-;;                (let (c (read-char))
-;;                  (if (alphanumeric c)
-;;                      ))
+(defun undo-letter ()
+  (format t "~&Undo which letter? ")
+  (let ((c (read-char)))
+    (if (alphanumericp c)
+        (if (inh c *decipher-table*)
+            (progn
+              (killh (geth c *decipher-table*) *encipher-table*)
+              (killh c *decipher-table*)))
+        (format t "~&~A not found" c))
+    (print "Error - not a character")))
+
+(defun solve ()
+  (fill-crypto-text)
+  (loop
+    (show-text *crypto-text*)
+    (format t "~&Substitute which letter? ")
+    (let ((l (read-letter)))
+      (case l
+        (undo (undo-letter))
+        (end (return))
+        (otherwise (sub-letter l)))
+      (print l))))
