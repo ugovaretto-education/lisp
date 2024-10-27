@@ -29,14 +29,17 @@
           (arc-label arc)
           (node-name (arc-to arc))))
 
-(defvar *nodes*)
-(defvar *arcs*)
-(defvar *current-node*)
+(defvar *nodes* ())
+(defvar *arcs* ())
+(defvar *current-node* ())
 
 (defun initialize ()
   (setf *nodes* nil)
   (setf *arcs* nil)
   (setf *current-node* nil))
+
+(defmacro defnode (name)
+  `(add-node ',name))
 
 (defun add-node (name)
   (let ((new-node (make-node :name name)))
@@ -46,4 +49,31 @@
   (or (find name *nodes* :key #'node-name)
       (error "No node names ~A exists." name)))
 
-(defmacro add-arc )
+(defun find-arc (from to)
+   (or (find-if (lambda (arc)
+              (let
+                  ((nf (node-name (arc-from arc)))
+                   (nt (node-name (arc-to arc))))
+                (and (eq nf from) (eq nt to))))
+            *arcs*)
+       (error "Cannot find Arc going from ~A to ~A" from to)))
+
+
+(defmacro defarc (from label to &optional action)
+  `(add-arc ',from ',label ',to ',action))
+
+(defun add-arc (from-name label to-name action)
+  (let* ((from (find-node from-name))
+         (to (find-node to-name))
+         (new-arc (make-arc :from from
+                            :label label
+                            :to to
+                            :action action)))
+    (setf *arcs* (nconc *arcs* (list new-arc)))
+    (setf (node-outputs from)
+          (nconc (node-outputs from)
+                 (list new-arc)))
+    (setf (node-inputs to)
+          (nconc (node-inputs to)
+                 (list new-arc)))
+    new-arc))
