@@ -85,8 +85,8 @@
 
 (defun one-transition ()
   (format t "~&Current state: ~A, action: " (node-name *current-node*))
-  (let* ((act (read))
-         (arc (find act (node-outputs *current-node*) :key #'arc-label)))
+  (let* ((label (read))
+         (arc (find label (node-outputs *current-node*) :key #'arc-label)))
     (setf *current-node* (arc-to arc))))
 
 (defun init-states()
