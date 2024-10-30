@@ -8,8 +8,8 @@
 
 (defstruct (node (:print-function print-node))
   (name nil)
-  (inputs nil)
-  (outputs nil))
+  (inputs ())
+  (outputs ()))
 
 (defun print-node (node stream depth)
   (declare (ignore depth))
@@ -34,8 +34,8 @@
 (defvar *current-node* nil)
 
 (defun initialize ()
-  (setf *nodes* nil)
-  (setf *arcs* nil)
+  (setf *nodes* ())
+  (setf *arcs* ())
   (setf *current-node* nil))
 
 (defmacro defnode (name)
@@ -70,24 +70,24 @@
                                   :label label
                                   :to to
                                   :action action)))
-          (push *arcs* new-arc)
-          (push (node-outputs from) new-arc)
-          (push (node-inputs to) new-arc)
+          (push new-arc *arcs*)
+          (push new-arc (node-outputs from))
+          (push new-arc (node-inputs to))
           new-arc))))
 
 (defun fsm (&optional (starting-state 'start))
   (initialize)
   (init-states)
-  (setf *current-node* (find-node starting-point))
-  (do (nil)
-      ((null (node-outputs *current-node*)))
-    (one-transition)))
+  (setf *current-node* (find-node starting-state))
+  (loop
+    (one-transition)
+    (when (null (node-outputs *current-node*)) (return))))
 
 (defun one-transition ()
-  (format t "~&Current state: ~A, action: " (node-name *current-node*))
+  (format t "~&Current state: ~A, event: " (node-name *current-node*))
   (let* ((label (read))
          (arc (find label (node-outputs *current-node*) :key #'arc-label)))
-    (setf *current-node* (arc-to arc))))
+    (if arc (setf *current-node* (arc-to arc)))))
 
 (defun init-states()
   (defnode start)
@@ -114,4 +114,5 @@
   (defarc have-20 gum-button end
     "Deliver gum, nickel change.")
   (defarc have-20 mint-button end "Deliver mints.")
-  (defarc have-20 coin-return start "Returned twenty cents."))
+  (defarc have-20 coin-return start "Returned twenty cents.")
+  (setf *current-node* (find-node 'start)))
