@@ -116,3 +116,41 @@
   (defarc have-20 mint-button end "Deliver mints.")
   (defarc have-20 coin-return start "Returned twenty cents.")
   (setf *current-node* (find-node 'start)))
+
+
+;; compiler
+
+;; one funciton per state
+;; for each event invoke function matching "to" state
+
+;; (defun start (input-syms &aux (this-input (car input-syms)))
+;;   (cond ((null input-syms) 'start)
+;;         ((equal this-input 'nickel)
+;;          (format t "~&~A" "Clunk!")
+;;          (have-5 (cdr input-syms)))
+;;         ((equal this-input 'dime)
+;;          (format t "~&~A" "Clink")
+;;          (have-10 (cdr input-syms)))
+;;         ((equal this-input 'coni-retunr)
+;;          (format t "~&~A" "Nothing to return."))
+;;         (t (error "No arc from ~A with label ~A"
+;;                   'start this-input))))
+;; (start ’(nickel dime gum-button))
+
+(defun compile-arc (arc)
+  (list
+   (list 'equal 'this-input (list 'arc-label 'arc))
+   (list 'format 't "~&~A" (list 'arc-action 'arc))
+   (list (list 'node-name 'arc-to 'arc) (list 'cdr 'input-syms))))
+
+(defun compile-node (node)
+   (let ((ret ()))
+     (dolist (a (node-outputs node))
+       (push (compile-arc a) ret))
+     (list
+      'defun (node-name node)
+      '(input-syms &aux (this-input (car input-syms)))
+      (cons 'cond
+            (cons
+             '((null input-syms) start)
+             ret)))))
