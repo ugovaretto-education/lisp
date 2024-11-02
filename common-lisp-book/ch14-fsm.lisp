@@ -139,12 +139,15 @@
 
 (defun compile-arc (arc)
   (list
-   (list 'equal 'this-input (list 'arc-label 'arc))
-   (list 'format 't "~&~A" (list 'arc-action 'arc))
-   (list (list 'node-name 'arc-to 'arc) (list 'cdr 'input-syms))))
+   (list 'equal 'this-input (list 'arc-label arc))
+   (list 'format 't "~&~A" (list 'arc-action arc))
+   (list (list 'node-name 'arc-to arc) (list 'cdr 'input-syms))))
 
 (defun compile-node (node)
-   (let ((ret ()))
+  (let ((ret (list(list 't
+                   (list 'error "No arc from ~A with label ~A"
+                         (node-name node)
+                         'this-input)))))
      (dolist (a (node-outputs node))
        (push (compile-arc a) ret))
      (list
