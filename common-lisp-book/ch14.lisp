@@ -16,7 +16,7 @@
      (setf ,x tmp)))
 
 (defmacro showvar (x)
-  '(format t "~&The value of ~A is ~A" (symbol-name 'x) x ))
+  (list 'format 't "~&The value of ~A is ~A" (symbol-name x) x ))
 
 (defmacro set-mutual (x y)
   `(setf x y))
