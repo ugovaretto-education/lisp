@@ -93,6 +93,24 @@ Compile functions to achieve TCO, not needed for *SBCL*:
     collect line)
 ```
 
+### Hackerank input
+
+```
+3
+123
+345
+789
+```
+
+```lisp
+(defun read-input ()
+  (loop
+    for line := (read-line *standard-input*  nil nil)
+    while (and line (not (zerop (length line))))
+    collect line))
+
+```
+
 ### Read multiple elements as strings until EOF/Ctrl-D
 
 ```lisp
@@ -151,6 +169,12 @@ Compile functions to achieve TCO, not needed for *SBCL*:
        for c = (peek-char nil stream nil nil)
        while (and c (eql c (peek-char t stream nil nil)))
        do (write-char (read-char stream) out))))
+```
+
+## Execute code in file
+
+```bash
+sbcl --load ./cavity-map.lisp --eval "(progn (main) (sb-ext:quit))"
 ```
 
 
