@@ -87,9 +87,12 @@
   (format t "~&Current state: ~A, event: " (node-name *current-node*))
   (let* ((label (read))
          (arc (find label (node-outputs *current-node*) :key #'arc-label)))
-    (if arc (setf *current-node* (arc-to arc)))))
+    (if arc
+        (progn (format t "~&~A" (arc-action arc))
+               (setf *current-node* (arc-to arc))))))
 
 (defun init-states()
+  (initialize)
   (defnode start)
   (defnode have-5)
   (defnode have-10)
@@ -104,7 +107,7 @@
   (defarc have-5 coin-return start "Returned five cents.")
   (defarc have-10 nickel have-15 "Clunk!")
   (defarc have-10 dime have-20 "Clink!")
-  (defarc have-10 coint-return start "Returned ten cents.")
+  (defarc have-10 coin-return start "Returned ten cents.")
   (defarc have-15 nickel have-20 "Clunk!")
   (defarc have-15 dime have-20 "Nickel change.")
   (defarc have-15 gum-button end "Deliver gum.")
@@ -120,7 +123,7 @@
 
 ;; compiler
 
-;; one funciton per state
+;; one function per state
 ;; for each event invoke function matching "to" state
 
 ;; (defun start (input-syms &aux (this-input (car input-syms)))
@@ -139,9 +142,9 @@
 
 (defun compile-arc (arc)
   (list
-   (list 'equal 'this-input (list 'arc-label arc))
-   (list 'format 't "~&~A" (list 'arc-action arc))
-   (list (list 'node-name 'arc-to arc) (list 'cdr 'input-syms))))
+   (list 'equal 'this-input (arc-label arc))
+     (list 'format 't "~&~A" (arc-action arc))
+     (list (node-name (arc-to arc)) (list 'cdr 'input-syms))))
 
 (defun compile-node (node)
   (let ((ret (list(list 't
