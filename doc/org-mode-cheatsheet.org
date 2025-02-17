@@ -1,0 +1,63 @@
+* Keys
+
+<TAB> fold/unfold
+<S-TAB> fold/unfold all
+<Alt>-<Left|Right Arrow> increase/decrease level
+<Alt>-<Up|Down Arrow> move section up/down
+<C-c-w> move section under other headline
+
+* Todo
+
+First line:
+#+SEQ_TODO: NEXT(n) TODO(t) WAITING (w) SOMEDAY (s) | DONE (d) CANCELLED (c)
+
+<C-c-t> change TODO item state
+<C-c-s> schedule
+
+Invoke "org-agenda-file-to-front" to add current file to agenda in
+order to diplay agenda items.
+
+* Indent
+
+Enable org-indent-mode, or add:
+
+#+BEGIN_SRC
+#+STARTUP: indent
+#+STARTUP: noindent
+#+END_SRC
+
+In the file header section.
+
+* Notes
+To add notes =<C-c-z>= into =:LOGBOOK:= set the =org-log-into-drawe= to non /nil/ value.
+
+* Archive
+<C-x-a> archive subtree, by default in <file name>.org_archive
+<C-x-S> archive entry
+Use =#+ARCHIVE: <filename>::= to select file name.
+Check what can be archived under current (cursor on) tag: <C-u-c-x-s>
+
+* Tags
+<C-c-q>
+
+* Looks
+
+#+begin_src emacs-lisp
+;; Org styling, hide markup etc.
+org-hide-emphasis-markers t
+org-pretty-entities t
+org-ellipsis "…"
+#+end_src
+
+* Latex
+
+<C-c-x-l> render LaTex fragment.
+
+Change Latex parameter
+
+#+begin_src emacs-lisp
+(setq org-format-latex-options '(:foreground default
+:background default
+:scale 10.0 :html-foreground default :html-background default :html-scale 1.0
+:matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+#end_src
