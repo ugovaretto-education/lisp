@@ -139,8 +139,7 @@ OR
 * C-x-<left|right>: move to other buffer
 * C-x b: select buffer
 * M-x untabify: replace tabs with spaces
-* C-u <number>: repeat following command <number> times
-* 
+* C-u <number>: repeat following command <number> times 
 * M-g M-n: next compile error
 * M-g M-p: prev compile error
 
